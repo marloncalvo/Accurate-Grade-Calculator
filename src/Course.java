@@ -1,16 +1,16 @@
 import java.util.ArrayList;
 
 public class Course {
-	private final double grade;
+	private final double averageGrade;
 	private final String courseName;
 	
-	public Course(String courseName, double grade) {
+	public Course(String courseName, double averageGrade) {
 		this.courseName = courseName;
-		this.grade = grade;
+		this.averageGrade = averageGrade;
 	}
 	
 	public double getGrade() {
-		return grade;
+		return averageGrade;
 	}
 	
 	public String getCourseName() {

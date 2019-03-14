@@ -35,8 +35,9 @@ public class QueryGrades {
 					//then adds all corresponding grades for that percentage 
 					//in array list
 					l = scan.nextLine();
-					double percent = Double.parseDouble(l.substring(0, l.length()-1));
-										
+					String[] category = FileUtils.seperateInputText(l, "-");
+					
+					double percent = Double.parseDouble(category[0].substring(0, category[0].indexOf("%")));
 					ArrayList<Double> singleBlockGrades = new ArrayList<Double>();
 					
 					//loop for every double for a certain percentage
@@ -68,6 +69,8 @@ public class QueryGrades {
 			return true;
 		return false;
 	}*/
+	
+	
 	
 	private static double calculateCourseGradeAverage() {
 		
