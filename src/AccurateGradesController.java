@@ -1,8 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class AccurateGradesController {
@@ -33,15 +31,14 @@ public class AccurateGradesController {
 		ArrayList<Course> courses = new ArrayList<Course>();
 		
 		for(String course : courseNames) {
-			try {
-				courses.add(new Course(course, 
-						QueryGrades.getCourseAverage(course, scan)));
-			} catch (IOException e ) {
-				e.printStackTrace();
-				System.out.println("[DEBUG] COURSE -> " + course + " NOT FOUND");
-			}
+			//LoggingUtils.log(course);
+			courses.add(new Course(course, QueryGrades.getDataForCourse(course, scan)));
 		}
+		
+		courses.get(0).toString(true);
+		courses.get(1).toString(true);
 	}
+	
 	
 	private static Scanner loadScanner(File inputFile) {
 		Scanner scan = null;
@@ -58,8 +55,4 @@ public class AccurateGradesController {
 		return scan;
 	}
 
-	
-	private void mapCourseInfo() {
-		
-	}
 }

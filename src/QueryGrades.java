@@ -1,9 +1,12 @@
 import java.io.IOException;
 import java.util.*;
 
+import datatypes.Assignment;
+import datatypes.Weight;
+
 public class QueryGrades {
 	
-	private static HashMap<Double, ArrayList<Double>> courseGrades;
+	private static HashMap<Weight, ArrayList<Assignment>> courseGrades;
 	
 	/**
 	 * Reads grades from a file, and generates a GPA for that course
@@ -12,23 +15,14 @@ public class QueryGrades {
 	 * @return GPA for that course
 	 * @throws IOException
 	 */
-	public static double getCourseAverage(String courseName, Scanner scan) throws IOException {
-					
-		getGradesForCourse(courseName, scan);
-		
-		double avg = calculateCourseGradeAverage();
-		
-		LoggingUtils.log("AVG GRADE FOR COURSE: " + courseName + " = " + avg);
-				
-		return avg;
-	}
 	
-	private static void getGradesForCourse(String courseName, Scanner scan) {
-
-		courseGrades = new HashMap<Double, ArrayList<Double>>();
+	public static HashMap<Weight, ArrayList<Assignment>> getDataForCourse(String courseName, Scanner scan) {
+		
+		courseGrades = new HashMap<Weight, ArrayList<Assignment>>();
+		
 		while(scan.hasNext()) {
 			String l = scan.nextLine(); 
-						
+
 			if(l.contains(courseName)) {
 				while(scan.hasNext(".%") || scan.hasNext("..%") || scan.hasNext("...%")) {
 					//loop starts here, check for a percentage
@@ -37,59 +31,27 @@ public class QueryGrades {
 					l = scan.nextLine();
 					String[] category = FileUtils.seperateInputText(l, "-");
 					
-					double percent = Double.parseDouble(category[0].substring(0, category[0].indexOf("%")));
-					ArrayList<Double> singleBlockGrades = new ArrayList<Double>();
+					ArrayList<Assignment> singleBlockGrades = new ArrayList<Assignment>();
 					
 					//loop for every double for a certain percentage
 					while(scan.hasNextDouble()) {
 						l = scan.nextLine();
-						singleBlockGrades.add(Double.parseDouble(l));
+						String[] string = FileUtils.seperateInputText(l, "-");
+						
+						singleBlockGrades.add(new Assignment(Double.parseDouble((string[0]))/100, string[1]));
 					}
-					courseGrades.put(percent, singleBlockGrades);
+					courseGrades.put(new Weight(FileUtils.parseDouble(category[0])/100, category[1]), singleBlockGrades);
+					return courseGrades;
 					//loop ends here
 				}
-				if (courseGrades.isEmpty()) {	
-					System.err.println("FORMATTING ERROR! CHECK FILE FOR ANY MISTAKES.");
+				if (courseGrades.isEmpty()) {
+					System.err.println("Course " + courseName + " not found!");	
 				}
-				return;
 			}
-			
-			
 		}
 		
-		if (courseGrades.isEmpty()) {	
-			System.err.println("Course " + courseName + " not found!");	
-		}
-		
-		return;
-	}
-	
-	/*private static boolean doesStringContainCourse(String l, String courseName) {
-		if(l.contains(courseName))
-			return true;
-		return false;
-	}*/
-	
-	
-	
-	private static double calculateCourseGradeAverage() {
-		
-		double totalPossiblePoints = 0;
-		double totalPercentage = 0;
-		
-		for(Map.Entry<Double, ArrayList<Double>> entry : courseGrades.entrySet()) {
-			int counter = 0;
-			double earnedPoints = 0;
-			for(Double score : entry.getValue()) {
-				earnedPoints += score;
-				++counter;
-			}
-			earnedPoints /= counter;
-			totalPossiblePoints += (earnedPoints * (entry.getKey() / 100));
-			totalPercentage += entry.getKey();
-		}
-		
-		
-		return totalPossiblePoints/(totalPercentage/100);
+		System.err.println("FORMATTING ERROR! CHECK FILE FOR ANY MISTAKES.");
+		LoggingUtils.log("RETURNING NULL");
+		return null;
 	}
 }

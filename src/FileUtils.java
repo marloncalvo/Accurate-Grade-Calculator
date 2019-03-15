@@ -25,6 +25,11 @@ public class FileUtils {
 		return string;
 	}
 	
+	public static Double parseDouble(String d) {
+		d = d.substring(0, d.indexOf("%"));
+		return Double.parseDouble(d);
+	}
+	
 	/**
 	 * Removes trailing and leading whitespace
 	 * @param string
